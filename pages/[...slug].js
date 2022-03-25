@@ -1,15 +1,16 @@
 import React from "react";
-import DynamicComponent from "../components/DynamicComponent";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
  
-import Storyblok, { useStoryblok } from "../lib/storyblok";
+import { StoryblokComponent, useStoryblokState, getStoryblokApi } from "@storyblok/react";
+
  
-export default function Page({ story, preview }) {
-  const enableBridge = true; // load the storyblok bridge everywhere
-  // const enableBridge = preview; // enable bridge only in prevew mode
-  story = useStoryblok(story, enableBridge);
- 
+export default function Page({ story }) {
+  
+  story = useStoryblokState(story, {
+    resolveRelations: ["featured-recipes.recipes"],
+  });
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -21,35 +22,28 @@ export default function Page({ story, preview }) {
         <h1>{story ? story.name : "My Site"}</h1>
       </header>
  
-      <DynamicComponent blok={story.content} />
+      <StoryblokComponent blok={story.content} />
     </div>
   );
 }
  
-export async function getStaticProps({ params, preview = false }) {
+export async function getStaticProps({ params }) {
   // join the slug array used in Next.js catch-all routes
   let slug = params.slug ? params.slug.join("/") : "home";
  
   let sbParams = {
     // change to `published` to load the published version
     version: "draft", // or published
+    resolve_relations: ["featured-recipes.recipes"],
   };
- 
-  if (preview) {
-    // set the version to draft in the preview mode
-    sbParams =  {
-      version: "draft",
-      resolve_relations: ["featured-recipes.recipes"],
-    };
-    sbParams.cv = Date.now();
-  }
- 
-  let { data } = await Storyblok.get(`cdn/stories/${slug}`, sbParams);
+  
+  const storyblokApi = getStoryblokApi()
+  let { data } = await storyblokApi.get(`cdn/stories/${slug}`, sbParams)
  
   return {
     props: {
       story: data ? data.story : false,
-      preview,
+      key: data ? data.story.id : false,
     },
     revalidate: 3600, // revalidate every hour
   };
@@ -57,8 +51,10 @@ export async function getStaticProps({ params, preview = false }) {
  
 export async function getStaticPaths() {
   // get all links from Storyblok
-  let { data } = await Storyblok.get("cdn/links/");
- 
+
+  const storyblokApi = getStoryblokApi()
+  let { data } = await storyblokApi.get(`cdn/links/`)
+
   let paths = [];
   // create a routes for every link
   Object.keys(data.links).forEach((linkKey) => {

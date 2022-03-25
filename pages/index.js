@@ -2,14 +2,13 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
  
 // The Storyblok Client & hook
-import Storyblok, { useStoryblok } from "../lib/storyblok";
-import DynamicComponent from "../components/DynamicComponent";
+import { StoryblokComponent, useStoryblokState, getStoryblokApi } from "@storyblok/react";
  
-export default function Home({ story, preview }) {
-  const enableBridge = true; // load the storyblok bridge everywhere
-  // const enableBridge = preview; // enable bridge only in prevew mode
+export default function Home({ story }) {
  
-  story = useStoryblok(story, enableBridge);
+  story = useStoryblokState(story, {
+    resolveRelations: ["featured-recipes.recipes"],
+  });
  
   return (
     <div className={styles.container}>
@@ -22,32 +21,27 @@ export default function Home({ story, preview }) {
         <h1>{story ? story.name : "My Site"}</h1>
       </header>
  
-      <DynamicComponent blok={story.content} />
+      <StoryblokComponent blok={story.content} />
     </div>
   );
 }
  
-export async function getStaticProps({ preview = false }) {
+export async function getStaticProps() {
   // home is the default slug for the homepage in Storyblok
   let slug = "home";
   // load the published content outside of the preview mode
   let sbParams = {
-    version: "published",
+    version: "draft",
     resolve_relations: ["featured-recipes.recipes"], // or 'draft'
   };
  
-  if (preview) {
-    // load the draft version inside of the preview mode
-    sbParams.version = "draft";
-    sbParams.cv = Date.now();
-  }
- 
-  let { data } = await Storyblok.get(`cdn/stories/${slug}`, sbParams);
+  const storyblokApi = getStoryblokApi()
+  let { data } = await storyblokApi.get(`cdn/stories/${slug}`, sbParams)
  
   return {
     props: {
-      story: data ? data.story : null,
-      preview,
+      story: data ? data.story : false,
+      key: data ? data.story.id : false,
     },
     revalidate: 3600, // revalidate every hour
   };

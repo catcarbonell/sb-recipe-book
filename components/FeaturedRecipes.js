@@ -22,9 +22,9 @@ const FeaturedRecipes = ({ blok }) => {
               <li key={recipe.slug} className="pr-8 w-1/3">
                 <Link href={`recipes/${recipe.slug}`}>
                   <a className="py-16 block transition hover:opacity-50">
-                    <img src={recipe.image} className="pb-10 w-full" />
+                    <img src={recipe.content.image.filename} className="pb-10 w-full" />
                     <h2 className="pb-6 text-lg font-bold">
-                      {recipe}
+                      {recipe.content.title}
                     </h2>
                   </a>
                 </Link>

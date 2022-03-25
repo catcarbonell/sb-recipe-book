@@ -32,7 +32,8 @@ export async function getStaticProps({ preview = false }) {
   let slug = "home";
   // load the published content outside of the preview mode
   let sbParams = {
-    version: "published", // or 'draft'
+    version: "published",
+    resolve_relations: ["featured-recipes.recipes"], // or 'draft'
   };
  
   if (preview) {

@@ -39,7 +39,7 @@ export async function getStaticProps({ params, preview = false }) {
     // set the version to draft in the preview mode
     sbParams =  {
       version: "draft",
-      resolve_relations: ["featured-recipes.posts"],
+      resolve_relations: ["featured-recipes.recipes"],
     };
     sbParams.cv = Date.now();
   }

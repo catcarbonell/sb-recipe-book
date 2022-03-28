@@ -1,6 +1,5 @@
 import React from "react";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
  
 import { StoryblokComponent, useStoryblokState, getStoryblokApi } from "@storyblok/react";
 
@@ -10,16 +9,16 @@ export default function Page({ story }) {
   story = useStoryblokState(story, {
     resolveRelations: ["featured-recipes.recipes"],
   });
-  
+
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>{story ? story.name : "My Site"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
  
       <header>
-        <h1>{story ? story.name : "My Site"}</h1>
+        <h1 className="text-4xl">{story ? story.name : "My Site"}</h1>
       </header>
  
       <StoryblokComponent blok={story.content} />

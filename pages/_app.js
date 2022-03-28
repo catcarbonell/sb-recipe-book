@@ -1,11 +1,12 @@
-import { storyblokInit, apiPlugin } from "@storyblok/react";
 import '../styles/globals.css'
+import { storyblokInit, apiPlugin } from "@storyblok/react";
 import Teaser from "../components/Teaser";
 import Grid from "../components/Grid";
 import Feature from "../components/Feature";
 import Page from "../components/Page";
 import Recipe from "../components/Recipe";
 import FeaturedRecipes from "../components/FeaturedRecipes";
+
  
 // resolve Storyblok components to Next.js components
 const components = {

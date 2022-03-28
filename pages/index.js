@@ -1,5 +1,4 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
  
 // The Storyblok Client & hook
 import { StoryblokComponent, useStoryblokState, getStoryblokApi } from "@storyblok/react";
@@ -11,15 +10,15 @@ export default function Home({ story }) {
   });
  
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
  
-      <header>
-        <h1>{story ? story.name : "My Site"}</h1>
-      </header>
+      {/* <header>
+        <h1 className="text-4xl bold mb-10">{story ? story.name : "My Site"}</h1>
+      </header> */}
  
       <StoryblokComponent blok={story.content} />
     </div>

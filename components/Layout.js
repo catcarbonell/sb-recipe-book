@@ -1,7 +1,7 @@
 
 
 const Layout = ({ children }) => (
-  <div className="bg-gray-300">
+  <div>
     {children}
   </div>
 );
